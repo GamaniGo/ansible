@@ -1,4 +1,7 @@
-- name: Create new VM with minimal options
-  community.general.proxmox_kvm:
-    name: spynal
-    node: pve-01
+- name: Create_VM
+  hosts: "*"
+  tasks:
+    - name: Exécuter le module Proxmox
+      community.general.proxmox_kvm:
+        node: pve-01
+        name: WIN-11-DEV
