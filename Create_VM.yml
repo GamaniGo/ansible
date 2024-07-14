@@ -1,0 +1,4 @@
+- name: Create new VM with minimal options
+  community.general.proxmox_kvm:
+    name: spynal
+    node: pve-01
