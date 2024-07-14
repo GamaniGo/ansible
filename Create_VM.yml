@@ -1,5 +1,6 @@
 - name: Create_VM
   hosts: "*"
+  become: true
   tasks:
     - name: Exécuter le module Proxmox
       community.general.proxmox_kvm:
