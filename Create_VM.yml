@@ -4,8 +4,9 @@
   tasks:
     - name: Exécuter le module Proxmox
       community.general.proxmox_kvm:
-        api_user: "{{ var_ansible_user }}"
-        api_host: "{{ var_api_host }}"
-        api_password: "{{ var_ansible_password }}"
+        api_user: ansible@pam
+        api_host: 192.168.0.112
+        api_token_id: ansible-token
+        api_token_secret: "{{ var_ansible_token }}"
         node: pve-01
         name: WIN-11-DEV
