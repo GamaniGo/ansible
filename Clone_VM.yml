@@ -1,0 +1,11 @@
+- name: Clone_VM
+  hosts: "*"
+  become: true
+  tasks:
+    - name: Exécuter le module Proxmox
+      community.general.proxmox_kvm:
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_api_host }}"
+        api_password: "{{ var_ansible_password }}"
+        node: pve-01
+        name: WIN-11-DEV
