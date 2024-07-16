@@ -9,7 +9,7 @@
         api_token_id: ansible-token
         api_token_secret: "{{ var_ansible_token }}"
         node: pve-01
-        password: 'PommeLover123'
-        hostname: 'lxc'
-        ostemplate: 'local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz'
-        netif: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0,firewall=1"}'
+        password: PommeLover123
+        hostname: lxc
+        ostemplate: local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz
+        netif: {"net0":"name=eth0,ip=dhcp,bridge=vmbr0,firewall=1"}
