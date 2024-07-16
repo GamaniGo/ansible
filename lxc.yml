@@ -2,7 +2,7 @@
   hosts: "*"
   become: true
   tasks:
-    - name: Exécuter le module Proxmox
+    - name: Execute Proxmox module
       community.general.proxmox:
         api_user: ansible@pam
         api_host: 192.168.0.112
@@ -12,4 +12,4 @@
         password: PommeLover123
         hostname: lxc
         ostemplate: local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz
-        netif: {"net0":"name=eth0,ip=dhcp,bridge=vmbr0,firewall=1"}
+        netif: "{'net0':'name=eth0,ip=dhcp,bridge=vmbr0,firewall=1'}"
