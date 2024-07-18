@@ -13,7 +13,7 @@
         #storage: DATA  # Nom du stockage approprié pour les conteneurs LXC
         disk: 
           - size: 20G  # Taille du disque racine
-            storage: DATA
+            #storage: DATA
         cores: 1
         password: 123456  # mot de passe VM
         state: present  # Indique à Ansible de créer le conteneur s'il n'existe pas
