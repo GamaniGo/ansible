@@ -1,14 +1,9 @@
 - name: List existing nodes
   hosts: "*"  # Tous les hôtes définis dans l'inventaire Ansible
   tasks:
-    #- name: Get Proxmox VE nodes info
+    - name: Get Proxmox VE nodes info
       community.general.proxmox_node_info:
         api_user: "{{ var_ansible_user }}"  # Nom d'utilisateur pour l'API Proxmox VE
         api_host: "{{ var_ansible_host }}"  # Adresse IP de l'hôte Proxmox VE
         api_token_id: "{{ var_ansible_token_id }}"  # Identifiant du token d'API
         api_token_secret: "{{ var_ansible_token }}"  # Secret du token d'API
-      register: pve_nodes_info
-
-    - name: Display Proxmox VE nodes info
-      debug:
-        var: pve_nodes_info
