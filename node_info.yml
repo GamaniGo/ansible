@@ -1,6 +1,15 @@
+---
 - name: Get Proxmox VE nodes info
+  hosts: your_proxmox_ve_host  # Replace with your host or host group
+
+  tasks:
+    - name: Gather Proxmox VE nodes info
       community.general.proxmox_node_info:
-        api_user: "{{ var_ansible_user }}"  # Nom d'utilisateur pour l'API Proxmox VE
-        api_host: "{{ var_ansible_host }}"  # Adresse IP de l'hôte Proxmox VE
-        api_token_id: "{{ var_ansible_token_id }}"  # Identifiant du token d'API
-        api_token_secret: "{{ var_ansible_token }}"  # Secret du token d'API
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+      register: proxmox_nodes_info
+
+    - debug:
+        var: proxmox_nodes_info
