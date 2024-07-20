@@ -2,7 +2,7 @@
 - name: Get Proxmox VE nodes info
   hosts: "*"  # Replace with your host or host group
   collections:
-    - community.general
+    - community.general.proxmox_node_info
 
   tasks:
     - name: Gather Proxmox VE nodes info
