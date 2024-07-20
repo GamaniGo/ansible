@@ -1,6 +1,6 @@
 ---
 - name: Get Proxmox VE nodes info
-  hosts: your_proxmox_ve_host  # Replace with your host or host group
+  hosts: *  # Replace with your host or host group
 
   tasks:
     - name: Gather Proxmox VE nodes info
