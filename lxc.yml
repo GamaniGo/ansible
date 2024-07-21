@@ -8,9 +8,10 @@
         api_token_id: "{{ var_ansible_token_id }}"  # Identifiant du token d'API
         api_token_secret: "{{ var_ansible_token }}"  # Secret du token d'API
         node: pve-01  # Nom du nœud Proxmox VE sur lequel créer le conteneur
-        hostname: hello  # Nom d'hôte du conteneur LXC à créer
+        hostname: coco123  # Nom d'hôte du conteneur LXC à créer
         ostemplate: 'local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz'  # Template OS pour le conteneur LXC
         disk: 'DATA:10'  # Nom du stockage approprié pour les conteneurs LXC avec une taille de 10 Go
         cores: 1  # Nombre de cœurs CPU alloués pour le conteneur LXC
+        memory: 1024 #memory size in MB for instance
         password: '123456'  # Mot de passe root pour le conteneur LXC
         state: present  # Indique à Ansible de créer le conteneur s'il n'existe pas déjà
