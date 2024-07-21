@@ -13,5 +13,8 @@
         disk: 'DATA:10'  # Nom du stockage approprié pour les conteneurs LXC avec une taille de 10 Go
         cores: 1  # Nombre de cœurs CPU alloués pour le conteneur LXC
         memory: 1024 #memory size in MB for instance
+        netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"}'
+        ostype: "alpine"
+        pool: AVS
         password: '123456'  # Mot de passe root pour le conteneur LXC
         #state: present  # Indique à Ansible de créer le conteneur s'il n'existe pas déjà
