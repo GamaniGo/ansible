@@ -15,6 +15,10 @@
       set_fact:
         proxmox_groups_users: "{{ proxmox_groups.proxmox_groups | map(attribute='users') | flatten }}"
 
+    - name: Afficher le nombre d'utilisateurs dans le groupe
+      debug:
+        msg: "Il y a {{ proxmox_groups_users | length }} utilisateur(s) dans le groupe a100-01-coco-coco."
+
     - name: Afficher la liste des utilisateurs
       debug:
         msg: "{{ proxmox_groups_users }}"
