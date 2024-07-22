@@ -1,53 +1,36 @@
 ---
-- name: Obtenir les utilisateurs d'un groupe sur Proxmox
-  hosts: "*"  # Tous les hôtes définis dans l'inventaire Ansible
+- name: Create LXC containers for users in group
+  hosts: "*"  # Replace with your host or host group
+  vars:
+    group_name: a100-01-coco-coco
   tasks:
-    - name: Récupérer les détails du groupe
+    - name: List existing groups
       community.general.proxmox_group_info:
-        api_user: "{{ var_ansible_user }}"  # Nom d'utilisateur pour l'API Proxmox VE
-        api_host: "{{ var_ansible_host }}"  # Adresse IP de l'hôte Proxmox VE
-        api_token_id: "{{ var_ansible_token_id }}"  # Identifiant du token d'API
-        api_token_secret: "{{ var_ansible_token }}"  # Secret du token d'API
-        group: a100-01-coco-coc
-      register: group_info
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+        group: "{{ group_name }}"
+      register: proxmox_groups
 
-    - name: Extraire la liste des utilisateurs
+    - name: Set fact with users list
       set_fact:
-        group_users: "{{ group_info.members }}"
+        proxmox_groups_users: "{{ proxmox_groups.proxmox_groups | map(attribute='users') | flatten }}"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- name: Create LXC Container on Proxmox VE
-  hosts: "*"  # Tous les hôtes définis dans l'inventaire Ansible
-  tasks:
-    - name: Create LXC Container
+    - name: Create LXC container for each user in group
       community.general.proxmox:
-        api_user: "{{ var_ansible_user }}"  # Nom d'utilisateur pour l'API Proxmox VE
-        api_host: "{{ var_ansible_host }}"  # Adresse IP de l'hôte Proxmox VE
-        api_token_id: "{{ var_ansible_token_id }}"  # Identifiant du token d'API
-        api_token_secret: "{{ var_ansible_token }}"  # Secret du token d'API
-        node: pve-01  # Nom du nœud Proxmox VE sur lequel créer le conteneur
-        hostname: coco123  # Nom d'hôte du conteneur LXC à créer
-        ostemplate: 'local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz'  # Template OS pour le conteneur LXC
-        disk: 'DATA:10'  # Nom du stockage approprié pour les conteneurs LXC avec une taille de 10 Go
-        cores: 1  # Nombre de cœurs CPU alloués pour le conteneur LXC
-        memory: 1024 #memory size in MB for instance
-        netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"}'
-        ostype: "alpine"
-        pool: AVS
-        password: '123456'  # Mot de passe root pour le conteneur LXC
-        #state: present  # Indique à Ansible de créer le conteneur s'il n'existe pas déjà
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+        vmid: "{{ item | replace('@', '-') }}"
+        hostname: "{{ item }}"
+        ostemplate: "local:vztmpl/ubuntu-20.04-standard_20.04-1_amd64.tar.gz"  # Replace with your desired LXC template
+        cores: 1
+        memory: 1024
+        swap: 512
+        netif: '{"net0":"name=eth0,bridge=vmbr0,ip=dhcp,tag=10,type=veth"}'
+        storage: local
+        disk: 8
+        state: present
+      with_items: "{{ proxmox_groups_users }}"
