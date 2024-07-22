@@ -23,14 +23,14 @@
         api_host: "{{ var_ansible_host }}"
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
-        vmid: "{{ item | replace('@', '-') }}"
-        hostname: "{{ item }}"
-        ostemplate: "local:vztmpl/ubuntu-20.04-standard_20.04-1_amd64.tar.gz"  # Replace with your desired LXC template
+        hostname: "{{ item | replace('@', '-') }}"
+        ostemplate: 'local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz'  # Template OS pour le conteneur LXC
         cores: 1
         memory: 1024
-        swap: 512
-        netif: '{"net0":"name=eth0,bridge=vmbr0,ip=dhcp,tag=10,type=veth"}'
-        storage: local
-        disk: 8
+        netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"}'
+        disk: 'DATA:10'  # Nom du stockage approprié pour les conteneurs LXC avec une taille de 10 Go
+        ostype: "alpine"
+        pool: AVS
+        password: '123456'  # Mot de passe root pour le conteneur LXC
         state: present
       with_items: "{{ proxmox_groups_users }}"
