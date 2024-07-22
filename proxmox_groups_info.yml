@@ -17,4 +17,4 @@
 
     - name: Afficher la liste des utilisateurs
       debug:
-        msg: "{{ proxmox_groups_users }}"
+        var: "{{ proxmox_groups_users }}"
