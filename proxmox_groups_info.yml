@@ -1,0 +1,14 @@
+---
+- name: List existing groups
+  hosts: "*"  # Replace with your host or host group
+  tasks:
+    - name: List existing groups
+      community.general.proxmox_group_info:
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+      register: proxmox_groups
+
+    - debug:
+        var: proxmox_groups
