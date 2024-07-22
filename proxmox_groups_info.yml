@@ -9,7 +9,7 @@
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
         group: a100-01-coco-coco
-      register: proxmox_groups
+      #register: proxmox_groups
 
-    - debug:
-        var: proxmox_groups
+    #- debug:
+        #var: proxmox_groups
