@@ -23,6 +23,7 @@
         api_host: "{{ var_ansible_host }}"
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
+        node: pve-01  # Nom du nœud Proxmox VE sur lequel créer le conteneur
         hostname: "{{ item | replace('@', '-') }}"
         ostemplate: 'local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz'  # Template OS pour le conteneur LXC
         cores: 1
