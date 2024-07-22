@@ -11,10 +11,10 @@
         group: a100-01-coco-coco
       register: proxmox_groups
 
-    #- debug:
-        #var: proxmox_groups
+    - name: Set fact with users list
+      set_fact:
+        proxmox_groups_users: "{{ proxmox_groups.proxmox_groups | map(attribute='users') | flatten }}"
 
-  tasks:
     - name: Afficher la liste des utilisateurs
       debug:
-        var: proxmox_groups.proxmox_groups | map(attribute='users') | flatten
+        var: proxmox_groups_users
