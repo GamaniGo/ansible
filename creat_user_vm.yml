@@ -2,7 +2,6 @@
 - name: Create LXC containers for users in group  # Nom de la tâche Ansible
   hosts: "*"  # Remplacer par le nom d'hôte ou le groupe approprié
   vars:
-    group_name: a100-01-coco-coco  # Nom du groupe Proxmox à utiliser
     os_type: alpine  # Type de système d'exploitation à utiliser pour les conteneurs LXC
   tasks:
     - name: List existing groups  # Tâche pour récupérer les informations sur les groupes existants
@@ -11,7 +10,7 @@
         api_host: "{{ var_ansible_host }}"  # Adresse IP ou nom d'hôte du serveur Proxmox
         api_token_id: "{{ var_ansible_token_id }}"  # Identifiant du jeton d'API Proxmox
         api_token_secret: "{{ var_ansible_token }}"  # Secret du jeton d'API Proxmox
-        group: "{{ group_name }}"  # Nom du groupe à utiliser
+        group: "{{ var_group_name }}"  # Nom du groupe à utiliser
       register: proxmox_groups  # Enregistrer les informations sur les groupes dans la variable proxmox_groups
 
     - name: Set fact with users list  # Tâche pour extraire la liste des utilisateurs à partir des informations sur les groupes
