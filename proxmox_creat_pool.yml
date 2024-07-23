@@ -22,4 +22,4 @@
         api_token_secret: "{{ var_ansible_token }}"
         name: "{{ item }}"
         state: present
-    loop: "{{ group_names }}"
+      loop: "{{ group_names }}"
