@@ -36,7 +36,7 @@
         netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"}'  # Configuration réseau pour le conteneur
         disk: 'DATA:10'  # Nom du stockage approprié pour les conteneurs LXC avec une taille de 10 Go
         ostype: "{{ os_type }}"  # Type de système d'exploitation à utiliser pour les conteneurs LXC
-        pool: AVS  # Nom du pool de stockage à utiliser pour les conteneurs LXC
+        pool: "{{ var_group_name }}"  # Nom du pool de stockage à utiliser pour les conteneurs LXC
         password: '123456'  # Mot de passe root pour le conteneur LXC
         state: present  # État souhaité pour le conteneur (présent ou absent)
       with_items: "{{ proxmox_vm_names }}"  # Utiliser la liste des noms de machines virtuelles pour créer un conteneur pour chaque utilisateur
