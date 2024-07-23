@@ -8,8 +8,12 @@
         api_host: "{{ var_ansible_host }}"
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
-        group: a100-01
+        #group: a100-01
       register: proxmox_groups
+
+    - name: Debug proxmox_groups variable
+      debug:
+        var: proxmox_groups
 
     - name: Set fact with users list
       set_fact:
