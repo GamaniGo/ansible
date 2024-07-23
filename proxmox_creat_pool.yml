@@ -12,7 +12,8 @@
 
     - name: Extract group names
       set_fact:
-        group_names: "{{ proxmox_groups.results | map(attribute='groupid') | list }}"
+        group_names: "{{ proxmox_groups.proxmox_groups | map(attribute='groupid') | list }}"
+
 
 
     - name: Create pool for each group
