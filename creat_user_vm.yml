@@ -42,24 +42,24 @@
       with_items: "{{ proxmox_vm_names }}"  # Utiliser la liste des noms de machines virtuelles pour créer un conteneur pour chaque utilisateur
 
       - name: Get VM ID for each VM
-        community.general.proxmox_vm_info:
-          api_user: "{{ var_ansible_user }}"
-          api_host: "{{ var_ansible_host }}"
-          api_token_id: "{{ var_ansible_token_id }}"
-          api_token_secret: "{{ var_ansible_token }}"
-          vm_name: "{{ item.vm_name }}"
-        register: proxmox_vm_info
+      community.general.proxmox_vm_info:
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+        vm_name: "{{ item.vm_name }}"
+      register: proxmox_vm_info
       with_items: "{{ proxmox_vm_names }}"
 
-      - name: Grant VM access to each user
-        community.general.proxmox:
-          api_user: "{{ var_ansible_user }}"
-          api_host: "{{ var_ansible_host }}"
-          api_token_id: "{{ var_ansible_token_id }}"
-          api_token_secret: "{{ var_ansible_token }}"
-          vmid: "{{ item.vmid }}"
-          user: "{{ item.username }}"
-          role: "PVEVMUserRole"
-          privileges: "All"
-          state: present
-        with_items: "{{ proxmox_vm_info.results }}"
+    - name: Grant VM access to each user
+      community.general.proxmox:
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+        vmid: "{{ item.vmid }}"
+        user: "{{ item.username }}"
+        role: "PVEVMUserRole"
+        privileges: "All"
+        state: present
+      with_items: "{{ proxmox_vm_info.results }}"
