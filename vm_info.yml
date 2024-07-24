@@ -17,6 +17,4 @@
 
     - name: Print VM IDs
       debug:
-        msg: "VM ID: {{ item.vmid }}"
-      loop: "{{ proxmox_vm_info.proxmox_vms }}"
-
+        msg: "VM ID: {{ proxmox_vm_info.proxmox_vms | map(attribute='vmid') | join(', ') }}"
