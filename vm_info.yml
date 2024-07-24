@@ -11,7 +11,7 @@
         api_host: "{{ var_ansible_host }}"
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
-        node: node01
+        node: pve-01
       register: proxmox_vm_info
 
     - debug:
