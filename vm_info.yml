@@ -15,4 +15,4 @@
       register: proxmox_vm_info
 
     - debug:
-        var: proxmox_vm_info.vmid
+        var: " {{ proxmox_vm_info.vmid }} "
