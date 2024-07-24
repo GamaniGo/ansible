@@ -1,9 +1,9 @@
-- name: Create LXC containers for users in group
+- name: Créer des conteneurs LXC pour les utilisateurs d'un groupe
   hosts: "*"
   vars:
     os_type: alpine
   tasks:
-    - name: List existing groups
+    - name: Récupérer la liste des groupes existants
       community.general.proxmox_group_info:
         api_user: "{{ var_ansible_user }}"
         api_host: "{{ var_ansible_host }}"
@@ -12,16 +12,16 @@
         group: "{{ var_group_name }}"
       register: proxmox_groups
 
-    - name: Set fact with users list
+    - name: Définir la liste des utilisateurs
       set_fact:
         proxmox_groups_users: "{{ proxmox_groups.proxmox_groups | map(attribute='users') | flatten }}"
 
-    - name: Set fact with VM names
+    - name: Définir la liste des noms de VM
       set_fact:
         proxmox_vm_names: "{{ proxmox_vm_names | default([]) + [{'username': item.split('@')[0], 'vm_name': item.split('@')[0] + '-' + os_type}] }}"
       with_items: "{{ proxmox_groups_users }}"
 
-    - name: Create LXC container for each user in group
+    - name: Créer un conteneur LXC pour chaque utilisateur du groupe
       community.general.proxmox:
         api_user: "{{ var_ansible_user }}"
         api_host: "{{ var_ansible_host }}"
@@ -38,27 +38,18 @@
         pool: "{{ var_group_name }}"
         password: '123456'
         state: present
+      register: proxmox_vms
       with_items: "{{ proxmox_vm_names }}"
 
-    - name: Get VM ID for each VM
-      community.general.proxmox_vm_info:
-        api_user: "{{ var_ansible_user }}"
-        api_host: "{{ var_ansible_host }}"
-        api_token_id: "{{ var_ansible_token_id }}"
-        api_token_secret: "{{ var_ansible_token }}"
-        name: "{{ item.vm_name }}"
-      register: proxmox_vm_info
-      with_items: "{{ proxmox_vm_names }}"
-
-    - name: Grant VM access to each user
+    - name: Accorder l'accès VM à chaque utilisateur
       community.general.proxmox:
         api_user: "{{ var_ansible_user }}"
         api_host: "{{ var_ansible_host }}"
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
-        vmid: "{{ item.vmid }}"
-        user: "{{ item.username }}"
+        vmid: "{{ item.resources.vmid }}"
+        user: "{{ item.item.username }}"
         role: "PVEVMUserRole"
         privileges: "All"
         state: present
-      with_items: "{{ proxmox_vm_info.results }}"
+      with_items: "{{ proxmox_vms.results }}"
