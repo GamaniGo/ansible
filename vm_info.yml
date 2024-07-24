@@ -14,5 +14,7 @@
         node: pve-01
       register: proxmox_vm_info
 
-    - debug:
-        var: " {{ proxmox_vm_info.vmid }} "
+    - name: Afficher la valeur de vmid pour chaque VM dans proxmox_vm_info
+      debug:
+        var: item.vmid
+      loop: "{{ proxmox_vm_info }}"
