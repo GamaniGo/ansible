@@ -46,7 +46,7 @@
         api_host: "{{ var_ansible_host }}"
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
-        vm_name: "{{ item.vm_name }}"
+        name: "{{ item.vm_name }}"
       register: proxmox_vm_info
       with_items: "{{ proxmox_vm_names }}"
 
