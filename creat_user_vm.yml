@@ -1,47 +1,46 @@
----
-- name: Create LXC containers for users in group  # Nom de la tâche Ansible
-  hosts: "*"  # Remplacer par le nom d'hôte ou le groupe approprié
+- name: Create LXC containers for users in group
+  hosts: "*"
   vars:
-    os_type: alpine  # Type de système d'exploitation à utiliser pour les conteneurs LXC
+    os_type: alpine
   tasks:
-    - name: List existing groups  # Tâche pour récupérer les informations sur les groupes existants
-      community.general.proxmox_group_info:  # Module Ansible pour récupérer les informations sur les groupes Proxmox
-        api_user: "{{ var_ansible_user }}"  # Nom d'utilisateur de l'API Proxmox
-        api_host: "{{ var_ansible_host }}"  # Adresse IP ou nom d'hôte du serveur Proxmox
-        api_token_id: "{{ var_ansible_token_id }}"  # Identifiant du jeton d'API Proxmox
-        api_token_secret: "{{ var_ansible_token }}"  # Secret du jeton d'API Proxmox
-        group: "{{ var_group_name }}"  # Nom du groupe à utiliser
-      register: proxmox_groups  # Enregistrer les informations sur les groupes dans la variable proxmox_groups
+    - name: List existing groups
+      community.general.proxmox_group_info:
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+        group: "{{ var_group_name }}"
+      register: proxmox_groups
 
-    - name: Set fact with users list  # Tâche pour extraire la liste des utilisateurs à partir des informations sur les groupes
-      set_fact:  # Module Ansible pour définir une variable
-        proxmox_groups_users: "{{ proxmox_groups.proxmox_groups | map(attribute='users') | flatten }}"  # Utiliser les filtres map et flatten pour extraire la liste des utilisateurs
+    - name: Set fact with users list
+      set_fact:
+        proxmox_groups_users: "{{ proxmox_groups.proxmox_groups | map(attribute='users') | flatten }}"
 
-    - name: Set fact with VM names  # Tâche pour définir les noms de machines virtuelles pour chaque utilisateur
-      set_fact:  # Module Ansible pour définir une variable
-        proxmox_vm_names: "{{ proxmox_vm_names | default([]) + [{'username': item.split('@')[0], 'vmid': item.split('@')[0] + '-' + os_type}] }}"  # Définir les noms de machines virtuelles en utilisant le nom d'utilisateur et le type de système d'exploitation
-      with_items: "{{ proxmox_groups_users }}"  # Utiliser la liste des utilisateurs pour créer une machine virtuelle pour chaque utilisateur
+    - name: Set fact with VM names
+      set_fact:
+        proxmox_vm_names: "{{ proxmox_vm_names | default([]) + [{'username': item.split('@')[0], 'vm_name': item.split('@')[0] + '-' + os_type}] }}"
+      with_items: "{{ proxmox_groups_users }}"
 
-    - name: Create LXC container for each user in group  # Tâche pour créer un conteneur LXC pour chaque utilisateur dans la liste
-      community.general.proxmox:  # Module Ansible pour créer des conteneurs LXC sur Proxmox VE
-        api_user: "{{ var_ansible_user }}"  # Nom d'utilisateur de l'API Proxmox
-        api_host: "{{ var_ansible_host }}"  # Adresse IP ou nom d'hôte du serveur Proxmox
-        api_token_id: "{{ var_ansible_token_id }}"  # Identifiant du jeton d'API Proxmox
-        api_token_secret: "{{ var_ansible_token }}"  # Secret du jeton d'API Proxmox
-        node: pve-01  # Nom du nœud Proxmox VE sur lequel créer le conteneur
-        hostname: "{{ item.vmid }}"  # Utiliser le nom d'utilisateur comme nom d'hôte du conteneur
-        ostemplate: 'local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz'  # Modèle de système d'exploitation à utiliser pour les conteneurs LXC
-        cores: 1  # Nombre de cœurs de processeur à allouer au conteneur
-        memory: 1024  # Quantité de mémoire à allouer au conteneur (en Mo)
-        netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"}'  # Configuration réseau pour le conteneur
-        disk: 'DATA:10'  # Nom du stockage approprié pour les conteneurs LXC avec une taille de 10 Go
-        ostype: "{{ os_type }}"  # Type de système d'exploitation à utiliser pour les conteneurs LXC
-        pool: "{{ var_group_name }}"  # Nom du pool de stockage à utiliser pour les conteneurs LXC
-        password: '123456'  # Mot de passe root pour le conteneur LXC
-        state: present  # État souhaité pour le conteneur (présent ou absent)
-      with_items: "{{ proxmox_vm_names }}"  # Utiliser la liste des noms de machines virtuelles pour créer un conteneur pour chaque utilisateur
+    - name: Create LXC container for each user in group
+      community.general.proxmox:
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+        node: pve-01
+        hostname: "{{ item.vm_name }}"
+        ostemplate: 'local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz'
+        cores: 1
+        memory: 1024
+        netif: '{"net0":"name=eth0,ip=dhcp,ip6=dhcp,bridge=vmbr0"}'
+        disk: 'DATA:10'
+        ostype: "{{ os_type }}"
+        pool: "{{ var_group_name }}"
+        password: '123456'
+        state: present
+      with_items: "{{ proxmox_vm_names }}"
 
-      - name: Get VM ID for each VM
+    - name: Get VM ID for each VM
       community.general.proxmox_vm_info:
         api_user: "{{ var_ansible_user }}"
         api_host: "{{ var_ansible_host }}"
