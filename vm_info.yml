@@ -1,0 +1,18 @@
+---
+- name: Get Proxmox VE VM info
+  hosts: "*"  # Replace with your host or host group
+  collections:
+    - community.general.proxmox_node_info
+
+  tasks:
+    - name: Gather Proxmox VE VM info
+      community.general.proxmox_vm_info:
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+        node: node01
+      register: proxmox_vm_info
+
+    - debug:
+        var: proxmox_vm_info
