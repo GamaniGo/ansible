@@ -2,7 +2,8 @@
 - name: Get Proxmox VE VM info
   hosts: "*"  # Replace with your host or host group
   collections:
-    - community.general.proxmox_node_info
+    - community.general
+
   vars:
     user_vm: "lena-alpine"
 
@@ -24,7 +25,7 @@
     - name: Display the variable
       debug:
         msg: "{{ vm_ids }}"
-        
+
     - name: Accorder l'accès VM à chaque utilisateur
       community.general.proxmox:
         api_user: "{{ var_ansible_user }}"
