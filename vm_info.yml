@@ -3,6 +3,8 @@
   hosts: "*"  # Replace with your host or host group
   collections:
     - community.general.proxmox_node_info
+  vars:
+    user_vm: "lena-alpine"
 
   tasks:
     - name: Gather Proxmox VE VM info
@@ -12,7 +14,7 @@
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
         node: pve-01
-        #name: lena-alpine
+        name: "{{ user_vm }}"
       register: proxmox_vm_info
 
     - name: Set a fact with the result of the command
