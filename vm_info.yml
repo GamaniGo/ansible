@@ -31,6 +31,7 @@
         api_host: "{{ var_ansible_host }}"
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
+        node: pve-01
         vmid: "{{ vm_ids }}"
         user: "{{ user_vm }}"
         role: "PVEVMUserRole"
