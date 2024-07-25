@@ -15,6 +15,10 @@
         name: lena-alpine
       register: proxmox_vm_info
 
-    - name: Print VM IDs
+    - name: Set a fact with the result of the command
+      set_fact:
+        vm_ids: "{{ proxmox_vm_info.proxmox_vms | map(attribute='vmid') | join(', ') }}"
+
+    - name: Display the variable
       debug:
-        msg: "VM ID: {{ proxmox_vm_info.proxmox_vms | map(attribute='vmid') | join(', ') }}"
+        msg: "{{ vm_ids }}"
