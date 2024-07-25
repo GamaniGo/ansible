@@ -32,6 +32,7 @@
         api_token_id: "{{ var_ansible_token_id }}"
         api_token_secret: "{{ var_ansible_token }}"
         node: pve-01
+        hostname: "{{ proxmox_vm_info.proxmox_vms | map(attribute='name') | join(', ') }}"
         vmid: "{{ vm_ids }}"
         user: "{{ user_vm }}"
         role: "PVEVMUserRole"
