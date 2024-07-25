@@ -24,3 +24,15 @@
     - name: Display the variable
       debug:
         msg: "{{ vm_ids }}"
+        
+    - name: Accorder l'accès VM à chaque utilisateur
+      community.general.proxmox:
+        api_user: "{{ var_ansible_user }}"
+        api_host: "{{ var_ansible_host }}"
+        api_token_id: "{{ var_ansible_token_id }}"
+        api_token_secret: "{{ var_ansible_token }}"
+        vmid: "{{ vm_ids }}"
+        user: "{{ user_vm }}"
+        role: "PVEVMUserRole"
+        privileges: "All"
+        state: present
